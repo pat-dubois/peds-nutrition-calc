@@ -28,27 +28,51 @@ Each output includes a "Show Your Work" toggle to display the actual calculation
 
 ## Formula Sources
 
-### Energy (EER) - Health Canada DRIs
+### Energy (EER) - Health Canada 2023 DRIs
 
-**Infants 0-35 months:**
-- 0-3 mo: `(89 × weight_kg - 100) + 175`
-- 4-6 mo: `(89 × weight_kg - 100) + 56`
-- 7-12 mo: `(89 × weight_kg - 100) + 22`
-- 13-35 mo: `(89 × weight_kg - 100) + 20`
+**Source:** https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/equations-estimate-energy-requirement.html
 
-**Children 3-18 years:**
-- Boys 3-8y: `88.5 - (61.9 × age) + PA × [(26.7 × weight_kg) + (903 × height_m)] + 20`
-- Boys 9-18y: `88.5 - (61.9 × age) + PA × [(26.7 × weight_kg) + (903 × height_m)] + 25`
-- Girls 3-8y: `135.3 - (30.8 × age) + PA × [(10.0 × weight_kg) + (934 × height_m)] + 20`
-- Girls 9-18y: `135.3 - (30.8 × age) + PA × [(10.0 × weight_kg) + (934 × height_m)] + 25`
+**Children 0-3 years** (gender-specific, no activity level):
 
-**PA Coefficients:**
-| Activity Level | PA Value |
-|----------------|----------|
-| Sedentary      | 1.0      |
-| Low Active     | 1.11     |
-| Active         | 1.25     |
-| Very Active    | 1.48     |
+*Males:*
+`EER = –716.45 – (1.00 × age_y) + (17.82 × height_cm) + (15.06 × weight_kg) + energy_deposition`
+
+*Females:*
+`EER = –69.15 + (80.0 × age_y) + (2.65 × height_cm) + (54.15 × weight_kg) + energy_deposition`
+
+| Age Range | Male Energy Dep | Female Energy Dep |
+|-----------|-----------------|-------------------|
+| 0-3 mo    | +200            | +180              |
+| 3-6 mo    | +50             | +60               |
+| 6-12 mo   | +20             | +20               |
+| 1-3 yr    | +20             | +15               |
+
+**Children 3-18 years** (activity-specific equations):
+
+Each activity level has a completely different equation (not PA coefficients).
+
+*Males:*
+| Activity | Equation |
+|----------|----------|
+| Inactive | `–447.51 + (3.68 × age) + (13.01 × height) + (13.15 × weight) + growth` |
+| Low Active | `19.12 + (3.68 × age) + (8.62 × height) + (20.28 × weight) + growth` |
+| Active | `–388.19 + (3.68 × age) + (12.66 × height) + (20.46 × weight) + growth` |
+| Very Active | `–671.75 + (3.68 × age) + (15.38 × height) + (23.25 × weight) + growth` |
+
+*Females:*
+| Activity | Equation |
+|----------|----------|
+| Inactive | `55.59 – (22.25 × age) + (8.43 × height) + (17.07 × weight) + growth` |
+| Low Active | `–297.54 – (22.25 × age) + (12.77 × height) + (14.73 × weight) + growth` |
+| Active | `–189.55 – (22.25 × age) + (11.74 × height) + (18.34 × weight) + growth` |
+| Very Active | `–709.59 – (22.25 × age) + (18.22 × height) + (14.25 × weight) + growth` |
+
+**Growth Allowances:**
+| Age Range | Allowance |
+|-----------|-----------|
+| 3-8 years | +20 kcal  |
+| 9-13 years| +25 kcal  |
+| 14-18 years| +20 kcal |
 
 ### Protein - Health Canada DRIs (RDA g/kg/day)
 
@@ -116,20 +140,21 @@ The Baylor College of Medicine calculator (https://www.bcm.edu/cnrc-apps/bodycom
 
 ---
 
-## Session Status (2025-12-17)
+## Session Status (2025-12-18)
 
 ### What Was Accomplished
-- Built complete Pediatric Nutrition Calculator from scratch
-- Researched and implemented Health Canada DRI formulas (energy, protein)
-- Implemented Holliday-Segar fluid formula
-- Created "Show Your Work" feature for calculation transparency
-- Designed mobile-responsive UI with Jim Pattison Children's Hospital-inspired colors
-- Added dark mode with persistent toggle
+- Built complete Pediatric Nutrition Calculator from scratch (Dec 17)
 - Deployed to GitHub Pages: https://pat-dubois.github.io/peds-nutrition-calc/
-- Created test-cases.md with 5 validated calculation scenarios
-- Made first public GitHub repo
+- Crystal tested and found formula version issue (Dec 18)
+- **Updated to Health Canada 2023 equations:**
+  - 0-3 years: Now gender-specific with height included
+  - 3-18 years: Activity-specific equations (replaces old PA coefficient approach)
+- Improved dark mode toggle (clean switch design)
+- Updated "Show Your Work" to reflect new formulas
+
+### Lessons Learned
+- **Research currency matters**: Initial search found widely-cited IOM 2002 formulas, but Health Canada has since updated. Always verify you have the NEWEST version of reference materials, especially for clinical/scientific tools.
 
 ### Next Session TODO
-1. Have Crystal validate calculations against real patient data
-2. Send her the link as the surprise
-3. Consider v2 enhancements: Gus sprite, pencil animation, copy-to-clipboard
+1. Crystal re-validation with updated formulas
+2. Consider v2 enhancements: Gus sprite, pencil animation, copy-to-clipboard
