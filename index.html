@@ -354,45 +354,68 @@
             display: none !important;
         }
 
-        /* Theme Toggle */
+        /* Theme Toggle - Clean Switch Style */
         .theme-toggle {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-            background: var(--card-bg);
+            position: relative;
+            width: 56px;
+            height: 28px;
+            border-radius: 14px;
+            border: none;
+            background: var(--border);
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: var(--shadow);
+            padding: 0;
             flex-shrink: 0;
+            transition: background-color 0.3s ease;
         }
 
         .theme-toggle:hover {
-            border-color: var(--primary);
+            background: var(--text-light);
         }
 
-        .theme-toggle svg {
-            width: 20px;
-            height: 20px;
-            color: var(--text);
+        [data-theme="dark"] .theme-toggle {
+            background: var(--primary);
         }
 
-        .theme-toggle .sun-icon {
-            display: none;
+        .theme-toggle-knob {
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .theme-toggle .moon-icon {
+        [data-theme="dark"] .theme-toggle-knob {
+            transform: translateX(28px);
+        }
+
+        .theme-toggle-knob svg {
+            width: 14px;
+            height: 14px;
+            color: var(--text-light);
+        }
+
+        .theme-toggle-knob .sun-icon {
             display: block;
         }
 
-        [data-theme="dark"] .theme-toggle .sun-icon {
-            display: block;
+        .theme-toggle-knob .moon-icon {
+            display: none;
         }
 
-        [data-theme="dark"] .theme-toggle .moon-icon {
+        [data-theme="dark"] .theme-toggle-knob .sun-icon {
             display: none;
+        }
+
+        [data-theme="dark"] .theme-toggle-knob .moon-icon {
+            display: block;
+            color: var(--primary);
         }
 
         /* Header with toggle */
@@ -418,20 +441,22 @@
                 <p class="subtitle">Energy, Protein & Fluid Requirements</p>
             </div>
             <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
-                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5"></circle>
-                    <line x1="12" y1="1" x2="12" y2="3"></line>
-                    <line x1="12" y1="21" x2="12" y2="23"></line>
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                    <line x1="1" y1="12" x2="3" y2="12"></line>
-                    <line x1="21" y1="12" x2="23" y2="12"></line>
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                </svg>
+                <span class="theme-toggle-knob">
+                    <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                </span>
             </button>
         </div>
 
@@ -527,19 +552,60 @@
         </div>
 
         <footer>
-            <p>Sources: <a href="https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables.html" target="_blank">Health Canada DRIs</a> | Holliday-Segar (1957)</p>
+            <p>Sources: <a href="https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/equations-estimate-energy-requirement.html" target="_blank">Health Canada DRI Energy Equations</a> | Holliday-Segar (1957)</p>
             <p style="margin-top: 8px;">For clinical use. Always verify calculations.</p>
         </footer>
     </div>
 
     <script>
-        // Physical Activity Coefficients
-        const PA_COEFFICIENTS = {
-            sedentary: 1.0,
-            low: 1.11,
-            active: 1.25,
-            very: 1.48
+        // NEW Health Canada 2023 EER Equations
+        // Note: These replace the old IOM 2002 PA coefficient approach
+        // Each activity level now has a completely different equation
+
+        // Males 3-18 years - coefficients for each activity level
+        const MALE_EER_3_18 = {
+            sedentary: { intercept: -447.51, age: 3.68, height: 13.01, weight: 13.15 },
+            low:       { intercept: 19.12,   age: 3.68, height: 8.62,  weight: 20.28 },
+            active:    { intercept: -388.19, age: 3.68, height: 12.66, weight: 20.46 },
+            very:      { intercept: -671.75, age: 3.68, height: 15.38, weight: 23.25 }
         };
+
+        // Females 3-18 years - coefficients for each activity level
+        const FEMALE_EER_3_18 = {
+            sedentary: { intercept: 55.59,   age: -22.25, height: 8.43,  weight: 17.07 },
+            low:       { intercept: -297.54, age: -22.25, height: 12.77, weight: 14.73 },
+            active:    { intercept: -189.55, age: -22.25, height: 11.74, weight: 18.34 },
+            very:      { intercept: -709.59, age: -22.25, height: 18.22, weight: 14.25 }
+        };
+
+        // 0-3 years base equations (different for males vs females)
+        const INFANT_EER = {
+            male:   { intercept: -716.45, age: -1.00, height: 17.82, weight: 15.06 },
+            female: { intercept: -69.15,  age: 80.0,  height: 2.65,  weight: 54.15 }
+        };
+
+        // Energy deposition by age range (kcal/day)
+        const ENERGY_DEPOSITION = {
+            male: [
+                { maxMonths: 3, value: 200 },
+                { maxMonths: 6, value: 50 },
+                { maxMonths: 12, value: 20 },
+                { maxMonths: 36, value: 20 }
+            ],
+            female: [
+                { maxMonths: 3, value: 180 },
+                { maxMonths: 6, value: 60 },
+                { maxMonths: 12, value: 20 },
+                { maxMonths: 36, value: 15 }
+            ]
+        };
+
+        // Growth allowances for 3-18 years
+        function getGrowthAllowance(ageYears) {
+            if (ageYears < 9) return 20;      // 3-8 years
+            if (ageYears < 14) return 25;     // 9-13 years
+            return 20;                         // 14-18 years
+        }
 
         // Protein requirements (g/kg/day) by age
         const PROTEIN_BY_AGE = [
@@ -582,82 +648,94 @@
         document.getElementById('ageYears').addEventListener('input', updateActivityNote);
         document.getElementById('ageMonths').addEventListener('input', updateActivityNote);
 
-        // Calculate Energy (EER)
+        // Calculate Energy (EER) - Health Canada 2023 Equations
         function calculateEnergy(weight, heightCm, ageMonths, gender, activity) {
-            const heightM = heightCm / 100;
             const ageYears = ageMonths / 12;
             let eer = 0;
             let formula = '';
             let steps = [];
 
-            // Infants 0-35 months (no PA needed)
-            if (ageMonths < 3) {
-                eer = (89 * weight - 100) + 175;
-                formula = 'EER = (89 × weight - 100) + 175';
+            // Children 0-3 years (gender-specific equations, no PA)
+            if (ageMonths < 36) {
+                const coeffs = gender === 'male' ? INFANT_EER.male : INFANT_EER.female;
+                const genderKey = gender === 'male' ? 'male' : 'female';
+
+                // Get energy deposition for this age range
+                let energyDep = 20;
+                let ageRangeLabel = '1-3 years';
+                for (const range of ENERGY_DEPOSITION[genderKey]) {
+                    if (ageMonths < range.maxMonths) {
+                        energyDep = range.value;
+                        if (range.maxMonths === 3) ageRangeLabel = '0-3 months';
+                        else if (range.maxMonths === 6) ageRangeLabel = '3-6 months';
+                        else if (range.maxMonths === 12) ageRangeLabel = '6-12 months';
+                        else ageRangeLabel = '1-3 years';
+                        break;
+                    }
+                }
+
+                // Calculate EER
+                const interceptPart = coeffs.intercept;
+                const agePart = coeffs.age * ageYears;
+                const heightPart = coeffs.height * heightCm;
+                const weightPart = coeffs.weight * weight;
+                eer = interceptPart + agePart + heightPart + weightPart + energyDep;
+
+                // Build formula display
+                const sign = (v) => v >= 0 ? '+' : '–';
+                const abs = (v) => Math.abs(v);
+
+                if (gender === 'male') {
+                    formula = `EER = –716.45 – (1.00 × age) + (17.82 × height) + (15.06 × weight) + ${energyDep}`;
+                } else {
+                    formula = `EER = –69.15 + (80.0 × age) + (2.65 × height) + (54.15 × weight) + ${energyDep}`;
+                }
+
                 steps = [
-                    `= (89 × ${weight} - 100) + 175`,
-                    `= (${(89 * weight).toFixed(1)} - 100) + 175`,
-                    `= ${(89 * weight - 100).toFixed(1)} + 175`,
-                    `= ${eer.toFixed(0)} kcal/day`
-                ];
-            } else if (ageMonths < 6) {
-                eer = (89 * weight - 100) + 56;
-                formula = 'EER = (89 × weight - 100) + 56';
-                steps = [
-                    `= (89 × ${weight} - 100) + 56`,
-                    `= (${(89 * weight).toFixed(1)} - 100) + 56`,
-                    `= ${(89 * weight - 100).toFixed(1)} + 56`,
-                    `= ${eer.toFixed(0)} kcal/day`
-                ];
-            } else if (ageMonths < 12) {
-                eer = (89 * weight - 100) + 22;
-                formula = 'EER = (89 × weight - 100) + 22';
-                steps = [
-                    `= (89 × ${weight} - 100) + 22`,
-                    `= (${(89 * weight).toFixed(1)} - 100) + 22`,
-                    `= ${(89 * weight - 100).toFixed(1)} + 22`,
-                    `= ${eer.toFixed(0)} kcal/day`
-                ];
-            } else if (ageMonths < 36) {
-                eer = (89 * weight - 100) + 20;
-                formula = 'EER = (89 × weight - 100) + 20';
-                steps = [
-                    `= (89 × ${weight} - 100) + 20`,
-                    `= (${(89 * weight).toFixed(1)} - 100) + 20`,
-                    `= ${(89 * weight - 100).toFixed(1)} + 20`,
+                    `Age range: ${ageRangeLabel} (energy deposition: +${energyDep} kcal)`,
+                    `= ${coeffs.intercept.toFixed(2)} ${sign(agePart)} (${abs(coeffs.age).toFixed(2)} × ${ageYears.toFixed(3)}) + (${coeffs.height.toFixed(2)} × ${heightCm}) + (${coeffs.weight.toFixed(2)} × ${weight}) + ${energyDep}`,
+                    `= ${coeffs.intercept.toFixed(2)} ${sign(agePart)} ${abs(agePart).toFixed(2)} + ${heightPart.toFixed(2)} + ${weightPart.toFixed(2)} + ${energyDep}`,
                     `= ${eer.toFixed(0)} kcal/day`
                 ];
             }
-            // Children 3-18 years (PA required)
+            // Children 3-18 years (activity-specific equations)
             else {
-                const pa = PA_COEFFICIENTS[activity] || 1.0;
-                const growthAllowance = ageYears < 9 ? 20 : 25;
+                const coeffs = gender === 'male' ? MALE_EER_3_18[activity] : FEMALE_EER_3_18[activity];
+                const growthAllowance = getGrowthAllowance(ageYears);
 
-                if (gender === 'male') {
-                    const innerCalc = (26.7 * weight) + (903 * heightM);
-                    eer = 88.5 - (61.9 * ageYears) + pa * innerCalc + growthAllowance;
-                    formula = `EER = 88.5 - (61.9 × age) + PA × [(26.7 × weight) + (903 × height_m)] + ${growthAllowance}`;
-                    steps = [
-                        `PA coefficient (${activity}): ${pa}`,
-                        `= 88.5 - (61.9 × ${ageYears.toFixed(2)}) + ${pa} × [(26.7 × ${weight}) + (903 × ${heightM.toFixed(2)})] + ${growthAllowance}`,
-                        `= 88.5 - ${(61.9 * ageYears).toFixed(1)} + ${pa} × [${(26.7 * weight).toFixed(1)} + ${(903 * heightM).toFixed(1)}] + ${growthAllowance}`,
-                        `= 88.5 - ${(61.9 * ageYears).toFixed(1)} + ${pa} × ${innerCalc.toFixed(1)} + ${growthAllowance}`,
-                        `= 88.5 - ${(61.9 * ageYears).toFixed(1)} + ${(pa * innerCalc).toFixed(1)} + ${growthAllowance}`,
-                        `= ${eer.toFixed(0)} kcal/day`
-                    ];
-                } else {
-                    const innerCalc = (10.0 * weight) + (934 * heightM);
-                    eer = 135.3 - (30.8 * ageYears) + pa * innerCalc + growthAllowance;
-                    formula = `EER = 135.3 - (30.8 × age) + PA × [(10.0 × weight) + (934 × height_m)] + ${growthAllowance}`;
-                    steps = [
-                        `PA coefficient (${activity}): ${pa}`,
-                        `= 135.3 - (30.8 × ${ageYears.toFixed(2)}) + ${pa} × [(10.0 × ${weight}) + (934 × ${heightM.toFixed(2)})] + ${growthAllowance}`,
-                        `= 135.3 - ${(30.8 * ageYears).toFixed(1)} + ${pa} × [${(10.0 * weight).toFixed(1)} + ${(934 * heightM).toFixed(1)}] + ${growthAllowance}`,
-                        `= 135.3 - ${(30.8 * ageYears).toFixed(1)} + ${pa} × ${innerCalc.toFixed(1)} + ${growthAllowance}`,
-                        `= 135.3 - ${(30.8 * ageYears).toFixed(1)} + ${(pa * innerCalc).toFixed(1)} + ${growthAllowance}`,
-                        `= ${eer.toFixed(0)} kcal/day`
-                    ];
-                }
+                // Calculate EER using the specific equation for this activity level
+                const interceptPart = coeffs.intercept;
+                const agePart = coeffs.age * ageYears;
+                const heightPart = coeffs.height * heightCm;
+                const weightPart = coeffs.weight * weight;
+                eer = interceptPart + agePart + heightPart + weightPart + growthAllowance;
+
+                // Activity level label
+                const activityLabels = {
+                    sedentary: 'Inactive',
+                    low: 'Low Active',
+                    active: 'Active',
+                    very: 'Very Active'
+                };
+
+                // Growth allowance label
+                let growthLabel = '3-8 years';
+                if (ageYears >= 9 && ageYears < 14) growthLabel = '9-13 years';
+                else if (ageYears >= 14) growthLabel = '14-18 years';
+
+                // Build formula
+                const sign = (v) => v >= 0 ? '+' : '–';
+                const abs = (v) => Math.abs(v);
+
+                formula = `EER (${activityLabels[activity]}) = ${coeffs.intercept.toFixed(2)} ${sign(coeffs.age)} (${abs(coeffs.age).toFixed(2)} × age) + (${coeffs.height.toFixed(2)} × height) + (${coeffs.weight.toFixed(2)} × weight) + ${growthAllowance}`;
+
+                steps = [
+                    `Activity: ${activityLabels[activity]}`,
+                    `Growth allowance (${growthLabel}): +${growthAllowance} kcal`,
+                    `= ${coeffs.intercept.toFixed(2)} ${sign(agePart)} (${abs(coeffs.age).toFixed(2)} × ${ageYears.toFixed(2)}) + (${coeffs.height.toFixed(2)} × ${heightCm}) + (${coeffs.weight.toFixed(2)} × ${weight}) + ${growthAllowance}`,
+                    `= ${coeffs.intercept.toFixed(2)} ${sign(agePart)} ${abs(agePart).toFixed(2)} + ${heightPart.toFixed(2)} + ${weightPart.toFixed(2)} + ${growthAllowance}`,
+                    `= ${eer.toFixed(0)} kcal/day`
+                ];
             }
 
             return {
