@@ -4,7 +4,7 @@ A fast, reliable web tool for calculating pediatric nutrition requirements. Buil
 
 ## Live Demo
 
-[Coming soon - will be hosted on GitHub Pages]
+**https://pat-dubois.github.io/peds-nutrition-calc/**
 
 ## Features
 
