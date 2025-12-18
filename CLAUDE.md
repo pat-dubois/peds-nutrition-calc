@@ -112,3 +112,24 @@ The Baylor College of Medicine calculator (https://www.bcm.edu/cnrc-apps/bodycom
 - Print/PDF export
 - Adult calculator
 - PWA for offline use
+- COPY toggle that copies the results to the clipboard nicely formatted
+
+---
+
+## Session Status (2025-12-17)
+
+### What Was Accomplished
+- Built complete Pediatric Nutrition Calculator from scratch
+- Researched and implemented Health Canada DRI formulas (energy, protein)
+- Implemented Holliday-Segar fluid formula
+- Created "Show Your Work" feature for calculation transparency
+- Designed mobile-responsive UI with Jim Pattison Children's Hospital-inspired colors
+- Added dark mode with persistent toggle
+- Deployed to GitHub Pages: https://pat-dubois.github.io/peds-nutrition-calc/
+- Created test-cases.md with 5 validated calculation scenarios
+- Made first public GitHub repo
+
+### Next Session TODO
+1. Have Crystal validate calculations against real patient data
+2. Send her the link as the surprise
+3. Consider v2 enhancements: Gus sprite, pencil animation, copy-to-clipboard
