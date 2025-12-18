@@ -23,6 +23,24 @@
             --border: #E2E8F0;
             --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --radius: 12px;
+            --input-bg: #FFFFFF;
+        }
+
+        [data-theme="dark"] {
+            --primary: #38BDF8;
+            --primary-light: #7DD3FC;
+            --background: #0F172A;
+            --card-bg: #1E293B;
+            --text: #F1F5F9;
+            --text-light: #94A3B8;
+            --success: #34D399;
+            --border: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.3);
+            --input-bg: #0F172A;
+        }
+
+        * {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.2s ease;
         }
 
         body {
@@ -42,9 +60,7 @@
 
         /* Header */
         header {
-            text-align: center;
             margin-bottom: 24px;
-            padding: 20px 0;
         }
 
         h1 {
@@ -97,9 +113,8 @@
             font-size: 1rem;
             border: 2px solid var(--border);
             border-radius: 8px;
-            background: var(--card-bg);
+            background: var(--input-bg);
             color: var(--text);
-            transition: border-color 0.2s, box-shadow 0.2s;
             -webkit-appearance: none;
             appearance: none;
         }
@@ -338,14 +353,87 @@
         .hidden {
             display: none !important;
         }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            background: var(--card-bg);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            flex-shrink: 0;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--primary);
+        }
+
+        .theme-toggle svg {
+            width: 20px;
+            height: 20px;
+            color: var(--text);
+        }
+
+        .theme-toggle .sun-icon {
+            display: none;
+        }
+
+        .theme-toggle .moon-icon {
+            display: block;
+        }
+
+        [data-theme="dark"] .theme-toggle .sun-icon {
+            display: block;
+        }
+
+        [data-theme="dark"] .theme-toggle .moon-icon {
+            display: none;
+        }
+
+        /* Header with toggle */
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            padding-top: 8px;
+        }
+
+        .header-content {
+            text-align: left;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Pediatric Nutrition Calculator</h1>
-            <p class="subtitle">Energy, Protein & Fluid Requirements</p>
-        </header>
+        <!-- Header Row with Title and Theme Toggle -->
+        <div class="header-row">
+            <div class="header-content">
+                <h1>Pediatric Nutrition Calculator</h1>
+                <p class="subtitle">Energy, Protein & Fluid Requirements</p>
+            </div>
+            <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+                <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+        </div>
 
         <!-- Input Form -->
         <div class="card">
@@ -767,6 +855,28 @@
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Initialize theme on page load
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (savedTheme) {
+                document.documentElement.setAttribute('data-theme', savedTheme);
+            } else if (prefersDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
     </script>
 </body>
 </html>
