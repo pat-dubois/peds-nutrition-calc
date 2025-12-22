@@ -306,6 +306,40 @@
             font-weight: 600;
         }
 
+        /* Copy Button */
+        .copy-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text);
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .copy-btn.copied {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .copy-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
         /* Footer */
         footer {
             text-align: center;
@@ -432,6 +466,15 @@
         <!-- Results -->
         <div class="results" id="results">
             <div class="patient-summary" id="patientSummary"></div>
+
+            <!-- Copy Button -->
+            <button class="copy-btn" id="copyBtn" onclick="copyResults()">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span id="copyBtnText">Copy Results</span>
+            </button>
 
             <!-- Energy Result -->
             <div class="result-card">
@@ -850,6 +893,63 @@
 
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Copy results to clipboard
+        function copyResults() {
+            const energy = document.getElementById('energyValue').textContent;
+            const protein = document.getElementById('proteinValue').textContent;
+            const proteinPerKg = document.getElementById('proteinPerKg').textContent;
+            const fluid = document.getElementById('fluidValue').textContent;
+            const fluidPerKg = document.getElementById('fluidPerKg').textContent;
+            const patientSummary = document.getElementById('patientSummary').textContent;
+
+            // Format for clipboard (clinical-friendly format)
+            const text = `${patientSummary}
+
+Nutrition Requirements:
+- Energy: ${energy} kcal/day
+- Protein: ${protein} g/day ${proteinPerKg}
+- Fluid: ${fluid} mL/day ${fluidPerKg}`;
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(text).then(() => {
+                // Show success feedback
+                const btn = document.getElementById('copyBtn');
+                const btnText = document.getElementById('copyBtnText');
+                const originalText = btnText.textContent;
+
+                btn.classList.add('copied');
+                btnText.textContent = 'Copied!';
+
+                // Reset after 2 seconds
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btnText.textContent = originalText;
+                }, 2000);
+            }).catch(err => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    const btn = document.getElementById('copyBtn');
+                    const btnText = document.getElementById('copyBtnText');
+                    btn.classList.add('copied');
+                    btnText.textContent = 'Copied!';
+                    setTimeout(() => {
+                        btn.classList.remove('copied');
+                        btnText.textContent = 'Copy Results';
+                    }, 2000);
+                } catch (e) {
+                    alert('Failed to copy. Please try again.');
+                }
+                document.body.removeChild(textarea);
+            });
         }
 
     </script>
