@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__tavily__tavily-search",
+      "mcp__tavily__tavily-extract",
+      "Bash(gh repo create:*)",
+      "Bash(gh api:*)",
+      "Bash(git pull:*)"
+    ]
+  }
+}
