@@ -208,7 +208,7 @@
             /* Staggered reveal animation */
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
         .results.visible .result-card {
@@ -221,11 +221,11 @@
         }
 
         .results.visible .result-card:nth-child(3) {
-            transition-delay: 0.25s;
+            transition-delay: 0.5s;
         }
 
         .results.visible .result-card:nth-child(4) {
-            transition-delay: 0.5s;
+            transition-delay: 0.75s;
         }
 
         .result-label {
@@ -843,15 +843,15 @@
             const fluid = calculateFluid(weight);
 
             // Display results with animated counters
-            animateValue(document.getElementById('energyValue'), energy.value, 1800);
+            animateValue(document.getElementById('energyValue'), energy.value, 2200);
             document.getElementById('energyPerKg').textContent = `(${(energy.value / weight).toFixed(1)} kcal/kg/day)`;
             document.getElementById('energyWork').innerHTML = energy.work;
 
-            animateValue(document.getElementById('proteinValue'), parseFloat(protein.value), 1500);
+            animateValue(document.getElementById('proteinValue'), parseFloat(protein.value), 1800);
             document.getElementById('proteinPerKg').textContent = `(${protein.gPerKg} g/kg/day)`;
             document.getElementById('proteinWork').innerHTML = protein.work;
 
-            animateValue(document.getElementById('fluidValue'), fluid.value, 1600);
+            animateValue(document.getElementById('fluidValue'), fluid.value, 2000);
             document.getElementById('fluidPerKg').textContent = `(${fluid.perKg} mL/kg/day)`;
             document.getElementById('fluidWork').innerHTML = fluid.work;
 
