@@ -205,6 +205,27 @@
             padding: 20px;
             margin-bottom: 16px;
             border-left: 4px solid var(--success);
+            /* Staggered reveal animation */
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .results.visible .result-card {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .results.visible .result-card:nth-child(2) {
+            transition-delay: 0s;
+        }
+
+        .results.visible .result-card:nth-child(3) {
+            transition-delay: 0.15s;
+        }
+
+        .results.visible .result-card:nth-child(4) {
+            transition-delay: 0.3s;
         }
 
         .result-label {
@@ -339,6 +360,15 @@
 
             .result-value {
                 font-size: 1.5rem;
+            }
+        }
+
+        /* Accessibility: Respect reduced motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            .result-card {
+                transition: none;
+                opacity: 1;
+                transform: none;
             }
         }
 
@@ -477,6 +507,40 @@
     </div>
 
     <script>
+        // Animated number counter - rolls up from 0 to final value
+        function animateValue(element, end, duration) {
+            // Respect reduced motion preference
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReducedMotion) {
+                element.textContent = typeof end === 'number' && !Number.isInteger(end)
+                    ? end.toFixed(1)
+                    : Math.round(end).toLocaleString();
+                return;
+            }
+
+            const startTime = performance.now();
+            const isDecimal = typeof end === 'number' && !Number.isInteger(end);
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Ease-out cubic for satisfying deceleration
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = end * eased;
+
+                element.textContent = isDecimal
+                    ? current.toFixed(1)
+                    : Math.round(current).toLocaleString();
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+
+            requestAnimationFrame(update);
+        }
+
         // NEW Health Canada 2023 EER Equations
         // Note: These replace the old IOM 2002 PA coefficient approach
         // Each activity level now has a completely different equation
@@ -778,16 +842,16 @@
             const protein = calculateProtein(weight, ageMonths);
             const fluid = calculateFluid(weight);
 
-            // Display results
-            document.getElementById('energyValue').textContent = energy.value.toLocaleString();
+            // Display results with animated counters
+            animateValue(document.getElementById('energyValue'), energy.value, 1000);
             document.getElementById('energyPerKg').textContent = `(${(energy.value / weight).toFixed(1)} kcal/kg/day)`;
             document.getElementById('energyWork').innerHTML = energy.work;
 
-            document.getElementById('proteinValue').textContent = protein.value;
+            animateValue(document.getElementById('proteinValue'), parseFloat(protein.value), 800);
             document.getElementById('proteinPerKg').textContent = `(${protein.gPerKg} g/kg/day)`;
             document.getElementById('proteinWork').innerHTML = protein.work;
 
-            document.getElementById('fluidValue').textContent = fluid.value.toLocaleString();
+            animateValue(document.getElementById('fluidValue'), fluid.value, 900);
             document.getElementById('fluidPerKg').textContent = `(${fluid.perKg} mL/kg/day)`;
             document.getElementById('fluidWork').innerHTML = fluid.work;
 
