@@ -437,6 +437,7 @@
             <div class="result-card">
                 <div class="result-label">Energy Requirement</div>
                 <div class="result-value"><span id="energyValue">--</span> <span class="result-unit">kcal/day</span></div>
+                <div class="result-secondary" id="energyPerKg"></div>
                 <button class="show-work-toggle" onclick="toggleWork('energy')">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
                     Show calculation
@@ -779,6 +780,7 @@
 
             // Display results
             document.getElementById('energyValue').textContent = energy.value.toLocaleString();
+            document.getElementById('energyPerKg').textContent = `(${(energy.value / weight).toFixed(1)} kcal/kg/day)`;
             document.getElementById('energyWork').innerHTML = energy.work;
 
             document.getElementById('proteinValue').textContent = protein.value;
