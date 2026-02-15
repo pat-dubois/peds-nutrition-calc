@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Crystal Calc</title>
+    <title>Little Spoon — Pediatric Nutrition Tools</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -86,24 +86,36 @@
 
         /* ── Header ── */
         .header {
-            padding: 20px 0 16px;
+            padding: 24px 0 18px;
             text-align: center;
         }
 
         .header h1 {
-            font-size: 1.35rem;
-            font-weight: 600;
+            font-size: 1.65rem;
+            font-weight: 700;
             color: var(--text-primary);
             letter-spacing: -0.02em;
         }
 
+        .header h1 .little {
+            font-weight: 700;
+            background: linear-gradient(
+                90deg,
+                #E06070, #E08040, #E5A91A, #40BFA0, #5CA8E0, #A080D0, #E06070
+            );
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbow-shift 9s linear infinite;
+        }
+
         .header .subtitle {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             font-weight: 400;
-            margin-top: 2px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+            margin-top: 4px;
+            letter-spacing: 0.06em;
         }
 
         /* ── Cards ── */
@@ -483,31 +495,7 @@
             color: var(--text-secondary);
         }
 
-        .brand {
-            font-weight: 600;
-            letter-spacing: 0.02em;
-        }
-
-        .brand-rainbow {
-            font-weight: 700;
-            background: linear-gradient(
-                90deg,
-                #E06070, #E08040, #E5A91A, #40BFA0, #5CA8E0, #A080D0, #E06070
-            );
-            background-size: 300% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: rainbow-shift 8s linear infinite;
-        }
-
-        @keyframes rainbow-shift {
-            0% { background-position: 0% center; }
-            100% { background-position: 300% center; }
-        }
-
         .sources {
-            margin-top: 6px;
             font-size: 0.65rem;
         }
 
@@ -545,8 +533,8 @@
 
         <!-- Header -->
         <div class="header">
-            <h1>Crystal Calc</h1>
-            <p class="subtitle">Pediatric Nutrition Tools</p>
+            <h1><span class="little">Little</span> Spoon</h1>
+            <p class="subtitle">a zhuzh labs app</p>
         </div>
 
         <!-- Shared Patient Info -->
@@ -693,12 +681,9 @@
         <!-- Footer -->
         <footer>
             <div class="sources">
-                Sources: <a href="https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/equations-estimate-energy-requirement.html" target="_blank">Health Canada DRI</a> · Holliday-Segar (1957) · <a href="https://www.who.int/tools/child-growth-standards" target="_blank">WHO Growth Standards</a>
+                <a href="https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/equations-estimate-energy-requirement.html" target="_blank">Health Canada DRI</a> · Holliday-Segar (1957) · <a href="https://www.who.int/tools/child-growth-standards" target="_blank">WHO Growth Standards</a>
             </div>
-            <div style="margin-top: 8px;">
-                <span class="brand">a <span class="brand-rainbow">zhuzhsoft</span> joint</span>
-            </div>
-            <div style="margin-top: 4px;">For clinical use. Always verify calculations.</div>
+            <div style="margin-top: 6px;">For clinical use. Always verify calculations.</div>
         </footer>
     </div>
 
