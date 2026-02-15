@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Crystal Calc</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ═══════════════════════════════════════
+           CRYSTAL CALC v2 — by zhuzhsoft
+           Design: Clinical Warmth
+           ═══════════════════════════════════════ */
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* Warm dark palette — Flexoki-inspired, brighter accents */
+            --bg-deep:    #181614;
+            --bg-base:    #1E1C19;
+            --bg-surface: #262320;
+            --bg-raised:  #2E2B27;
+            --bg-hover:   #363230;
+
+            --border:     #3A3530;
+            --border-subtle: #2E2A26;
+
+            --text-primary:   #F2EDE8;
+            --text-secondary: #A89F96;
+            --text-muted:     #6E6560;
+
+            /* Accent colors — Flexoki turned up */
+            --accent-gold:    #E5A91A;
+            --accent-gold-dim: rgba(229, 169, 26, 0.12);
+            --accent-teal:    #40BFA0;
+            --accent-teal-dim: rgba(64, 191, 160, 0.10);
+            --accent-rose:    #E06070;
+            --accent-blue:    #5CA8E0;
+            --accent-purple:  #A080D0;
+            --accent-orange:  #E08040;
+
+            /* Functional */
+            --success:     #40BFA0;
+            --success-dim: rgba(64, 191, 160, 0.08);
+            --error:       #E06070;
+            --input-bg:    #1A1816;
+            --input-border: #3A3530;
+            --input-focus:  #E5A91A;
+
+            /* Layout */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-pill: 100px;
+
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+            --shadow-lg: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        body {
+            font-family: 'Outfit', -apple-system, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            min-height: 100dvh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Container ── */
+        .app {
+            max-width: 440px;
+            margin: 0 auto;
+            padding: 0 16px 32px;
+        }
+
+        /* ── Header ── */
+        .header {
+            padding: 20px 0 16px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 400;
+            margin-top: 2px;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 12px;
+        }
+
+        .card-label {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+        }
+
+        /* ── Form Inputs ── */
+        .field-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .field-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .field {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .field label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 12px 14px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            background: var(--input-bg);
+            border: 1.5px solid var(--input-border);
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .field input::placeholder {
+            color: var(--text-muted);
+            font-weight: 300;
+        }
+
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px var(--accent-gold-dim);
+        }
+
+        .field select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%236E6560' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        /* Gender toggle */
+        .gender-toggle {
+            display: flex;
+            gap: 0;
+            background: var(--input-bg);
+            border: 1.5px solid var(--input-border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .gender-toggle input {
+            display: none;
+        }
+
+        .gender-toggle label {
+            flex: 1;
+            padding: 12px 0;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            margin: 0;
+        }
+
+        .gender-toggle input:checked + label {
+            background: var(--accent-gold-dim);
+            color: var(--accent-gold);
+        }
+
+        /* ── Tab Navigation ── */
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-pill);
+            padding: 4px;
+            margin-bottom: 12px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 6px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.78rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-pill);
+            cursor: pointer;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-secondary);
+        }
+
+        .tab-btn.active {
+            background: var(--accent-gold);
+            color: var(--bg-deep);
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* ── Tab Content ── */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── Activity Level ── */
+        .activity-note {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        /* ── Buttons ── */
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+        }
+
+        .btn-primary {
+            background: var(--accent-gold);
+            color: var(--bg-deep);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
+
+        .btn-secondary {
+            background: var(--bg-raised);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-hover);
+        }
+
+        /* ── Results ── */
+        .results {
+            display: none;
+        }
+
+        .results.visible {
+            display: block;
+        }
+
+        .patient-banner {
+            background: var(--bg-raised);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            margin-bottom: 12px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+        }
+
+        .patient-banner strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .result-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-left: 3px solid var(--success);
+            border-radius: var(--radius-md);
+            padding: 18px 20px;
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .results.visible .result-card {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .results.visible .result-card:nth-child(2) { transition-delay: 0s; }
+        .results.visible .result-card:nth-child(3) { transition-delay: 0.35s; }
+        .results.visible .result-card:nth-child(4) { transition-delay: 0.6s; }
+
+        .result-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .result-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--success);
+            letter-spacing: -0.02em;
+        }
+
+        .result-unit {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .result-secondary {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        /* ── Show Work Toggle ── */
+        .show-work-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+            padding: 6px 0;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--accent-gold);
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+        }
+
+        .show-work-btn:hover {
+            opacity: 0.8;
+        }
+
+        .show-work-btn svg {
+            transition: transform 0.2s;
+        }
+
+        .show-work-btn.open svg {
+            transform: rotate(180deg);
+        }
+
+        .calc-details {
+            display: none;
+            margin-top: 10px;
+            padding: 14px;
+            background: var(--bg-deep);
+            border-radius: var(--radius-sm);
+            font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+            font-size: 0.75rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+        }
+
+        .calc-details.visible {
+            display: block;
+        }
+
+        .calc-formula { color: var(--accent-gold); font-weight: 500; }
+        .calc-step { color: var(--text-muted); }
+        .calc-result { color: var(--success); font-weight: 600; }
+
+        /* ── Coming Soon Placeholder ── */
+        .coming-soon {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--text-muted);
+        }
+
+        .coming-soon .icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .coming-soon h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .coming-soon p {
+            font-size: 0.82rem;
+            line-height: 1.6;
+        }
+
+        /* ── Footer ── */
+        footer {
+            text-align: center;
+            padding: 24px 0 8px;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        footer a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--text-secondary);
+        }
+
+        .brand {
+            font-weight: 600;
+            letter-spacing: 0.02em;
+        }
+
+        .brand-rainbow {
+            font-weight: 700;
+            background: linear-gradient(
+                90deg,
+                #E06070, #E08040, #E5A91A, #40BFA0, #5CA8E0, #A080D0, #E06070
+            );
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbow-shift 8s linear infinite;
+        }
+
+        @keyframes rainbow-shift {
+            0% { background-position: 0% center; }
+            100% { background-position: 300% center; }
+        }
+
+        .sources {
+            margin-top: 6px;
+            font-size: 0.65rem;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 380px) {
+            .app { padding: 0 12px 24px; }
+            .card { padding: 16px; }
+            .tab-btn { font-size: 0.72rem; padding: 9px 4px; }
+            .result-value { font-size: 1.4rem; }
+        }
+
+        /* ── Accessibility ── */
+        @media (prefers-reduced-motion: reduce) {
+            .result-card {
+                transition: none;
+                opacity: 1;
+                transform: none;
+            }
+            .brand-rainbow {
+                animation: none;
+            }
+            @keyframes fadeIn { from { opacity: 1; } to { opacity: 1; } }
+        }
+
+        /* ── Disabled state ── */
+        .field input:disabled,
+        .field select:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+
+        <!-- Header -->
+        <div class="header">
+            <h1>Crystal Calc</h1>
+            <p class="subtitle">Pediatric Nutrition Tools</p>
+        </div>
+
+        <!-- Shared Patient Info -->
+        <div class="card" id="sharedFields">
+            <div class="card-label">Patient</div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label for="weight">Weight (kg)</label>
+                    <input type="number" id="weight" placeholder="e.g. 25" step="0.1" min="0.5" max="150" inputmode="decimal">
+                </div>
+                <div class="field">
+                    <label for="height">Height (cm)</label>
+                    <input type="number" id="height" placeholder="e.g. 120" step="0.1" min="20" max="220" inputmode="decimal">
+                </div>
+            </div>
+
+            <div class="field-row">
+                <div class="field">
+                    <label>Gender</label>
+                    <div class="gender-toggle">
+                        <input type="radio" name="gender" id="genderM" value="male">
+                        <label for="genderM">Male</label>
+                        <input type="radio" name="gender" id="genderF" value="female">
+                        <label for="genderF">Female</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('nutrition')" id="tabNutrition">Nutrition</button>
+            <button class="tab-btn" onclick="switchTab('growth')" id="tabGrowth">Growth</button>
+            <button class="tab-btn" onclick="switchTab('dri')" id="tabDRI">DRI</button>
+        </div>
+
+        <!-- ════════════════════════════════════
+             TAB 1: Nutrition Requirements
+             ════════════════════════════════════ -->
+        <div class="tab-content active" id="contentNutrition">
+            <div class="card">
+                <div class="card-label">Age & Activity</div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label for="ageYears">Years</label>
+                        <input type="number" id="ageYears" placeholder="0" min="0" max="18" inputmode="numeric">
+                    </div>
+                    <div class="field">
+                        <label for="ageMonths">Months</label>
+                        <input type="number" id="ageMonths" placeholder="0" min="0" max="11" inputmode="numeric">
+                    </div>
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label for="activity">Activity Level</label>
+                        <select id="activity">
+                            <option value="">Select level</option>
+                            <option value="sedentary">Sedentary</option>
+                            <option value="low">Low Active</option>
+                            <option value="active">Active</option>
+                            <option value="very">Very Active</option>
+                        </select>
+                        <p class="activity-note" id="activityNote"></p>
+                    </div>
+                </div>
+
+                <div class="btn-row">
+                    <button class="btn btn-primary" onclick="calculateNutrition()">Calculate</button>
+                    <button class="btn btn-secondary" onclick="resetAll()">Reset</button>
+                </div>
+            </div>
+
+            <!-- Nutrition Results -->
+            <div class="results" id="nutritionResults">
+                <div class="patient-banner" id="patientBanner"></div>
+
+                <!-- Energy -->
+                <div class="result-card">
+                    <div class="result-label">Energy Requirement</div>
+                    <div class="result-value"><span id="energyVal">--</span> <span class="result-unit">kcal/day</span></div>
+                    <div class="result-secondary" id="energyPerKg"></div>
+                    <button class="show-work-btn" onclick="toggleWork('energy')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        Show calculation
+                    </button>
+                    <div class="calc-details" id="energyWork"></div>
+                </div>
+
+                <!-- Protein -->
+                <div class="result-card">
+                    <div class="result-label">Protein Requirement</div>
+                    <div class="result-value"><span id="proteinVal">--</span> <span class="result-unit">g/day</span></div>
+                    <div class="result-secondary" id="proteinPerKg"></div>
+                    <button class="show-work-btn" onclick="toggleWork('protein')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        Show calculation
+                    </button>
+                    <div class="calc-details" id="proteinWork"></div>
+                </div>
+
+                <!-- Fluid -->
+                <div class="result-card">
+                    <div class="result-label">Fluid Requirement</div>
+                    <div class="result-value"><span id="fluidVal">--</span> <span class="result-unit">mL/day</span></div>
+                    <div class="result-secondary" id="fluidPerKg"></div>
+                    <button class="show-work-btn" onclick="toggleWork('fluid')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                        Show calculation
+                    </button>
+                    <div class="calc-details" id="fluidWork"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════
+             TAB 2: Growth Charts (placeholder)
+             ════════════════════════════════════ -->
+        <div class="tab-content" id="contentGrowth">
+            <div class="card">
+                <div class="coming-soon">
+                    <div class="icon">📊</div>
+                    <h3>Growth Charts</h3>
+                    <p>WHO percentiles & Z-scores.<br>Coming next.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════
+             TAB 3: DRI Reference (placeholder)
+             ════════════════════════════════════ -->
+        <div class="tab-content" id="contentDRI">
+            <div class="card">
+                <div class="coming-soon">
+                    <div class="icon">📋</div>
+                    <h3>DRI Reference</h3>
+                    <p>Health Canada daily reference intakes.<br>Coming soon.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer>
+            <div class="sources">
+                Sources: <a href="https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/equations-estimate-energy-requirement.html" target="_blank">Health Canada DRI</a> · Holliday-Segar (1957) · <a href="https://www.who.int/tools/child-growth-standards" target="_blank">WHO Growth Standards</a>
+            </div>
+            <div style="margin-top: 8px;">
+                <span class="brand">a <span class="brand-rainbow">zhuzhsoft</span> joint</span>
+            </div>
+            <div style="margin-top: 4px;">For clinical use. Always verify calculations.</div>
+        </footer>
+    </div>
+
+    <script>
+    /* ═══════════════════════════════════════
+       CRYSTAL CALC v2 — Logic
+       ═══════════════════════════════════════ */
+
+    // ── Tab Navigation ──
+    function switchTab(tab) {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        const tabMap = {
+            nutrition: { btn: 'tabNutrition', content: 'contentNutrition' },
+            growth:    { btn: 'tabGrowth',    content: 'contentGrowth' },
+            dri:       { btn: 'tabDRI',       content: 'contentDRI' }
+        };
+
+        document.getElementById(tabMap[tab].btn).classList.add('active');
+        document.getElementById(tabMap[tab].content).classList.add('active');
+    }
+
+    // ── Animated Counter ──
+    function animateValue(el, end, duration) {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            el.textContent = typeof end === 'number' && !Number.isInteger(end)
+                ? end.toFixed(1) : Math.round(end).toLocaleString();
+            return;
+        }
+        const start = performance.now();
+        const isDecimal = typeof end === 'number' && !Number.isInteger(end);
+        function tick(now) {
+            const t = Math.min((now - start) / duration, 1);
+            const ease = 1 - Math.pow(1 - t, 3);
+            const val = end * ease;
+            el.textContent = isDecimal ? val.toFixed(1) : Math.round(val).toLocaleString();
+            if (t < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    }
+
+    // ── Age Helpers ──
+    function getAgeMonths() {
+        return (parseInt(document.getElementById('ageYears').value) || 0) * 12
+             + (parseInt(document.getElementById('ageMonths').value) || 0);
+    }
+
+    // Update activity note when age changes
+    ['ageYears', 'ageMonths'].forEach(id => {
+        document.getElementById(id).addEventListener('input', () => {
+            const months = getAgeMonths();
+            const note = document.getElementById('activityNote');
+            const sel = document.getElementById('activity');
+            if (months < 36) {
+                note.textContent = 'Not used for children under 3 years.';
+                sel.disabled = true;
+            } else {
+                note.textContent = '';
+                sel.disabled = false;
+            }
+        });
+    });
+
+    // ── Gender Helper ──
+    function getGender() {
+        const checked = document.querySelector('input[name="gender"]:checked');
+        return checked ? checked.value : '';
+    }
+
+    // ══════════════════════════════════════════
+    //  HEALTH CANADA 2023 EER EQUATIONS
+    // ══════════════════════════════════════════
+
+    const MALE_EER = {
+        sedentary: { i: -447.51, a: 3.68, h: 13.01, w: 13.15 },
+        low:       { i: 19.12,   a: 3.68, h: 8.62,  w: 20.28 },
+        active:    { i: -388.19, a: 3.68, h: 12.66, w: 20.46 },
+        very:      { i: -671.75, a: 3.68, h: 15.38, w: 23.25 }
+    };
+
+    const FEMALE_EER = {
+        sedentary: { i: 55.59,   a: -22.25, h: 8.43,  w: 17.07 },
+        low:       { i: -297.54, a: -22.25, h: 12.77, w: 14.73 },
+        active:    { i: -189.55, a: -22.25, h: 11.74, w: 18.34 },
+        very:      { i: -709.59, a: -22.25, h: 18.22, w: 14.25 }
+    };
+
+    const INFANT_EER = {
+        male:   { i: -716.45, a: -1.00, h: 17.82, w: 15.06 },
+        female: { i: -69.15,  a: 80.0,  h: 2.65,  w: 54.15 }
+    };
+
+    const ENERGY_DEP = {
+        male:   [[3,200],[6,50],[12,20],[36,20]],
+        female: [[3,180],[6,60],[12,20],[36,15]]
+    };
+
+    function getGrowthAllowance(ageY) {
+        if (ageY < 9) return 20;
+        if (ageY < 14) return 25;
+        return 20;
+    }
+
+    const PROTEIN = [[6,1.52],[12,1.2],[36,1.05],[96,0.95],[156,0.95],[216,0.85]];
+
+    // ── Calculate Energy ──
+    function calcEnergy(wt, ht, ageM, gender, activity) {
+        const ageY = ageM / 12;
+        let eer, formula, steps;
+
+        if (ageM < 36) {
+            const c = INFANT_EER[gender];
+            let dep = 20, ageLabel = '1-3 yr';
+            for (const [max, val] of ENERGY_DEP[gender]) {
+                if (ageM < max) {
+                    dep = val;
+                    ageLabel = max <= 3 ? '0-3 mo' : max <= 6 ? '3-6 mo' : max <= 12 ? '6-12 mo' : '1-3 yr';
+                    break;
+                }
+            }
+            eer = c.i + c.a * ageY + c.h * ht + c.w * wt + dep;
+            const sign = v => v >= 0 ? '+' : '–';
+            formula = gender === 'male'
+                ? `EER = –716.45 – (1.00 × age) + (17.82 × height) + (15.06 × weight) + ${dep}`
+                : `EER = –69.15 + (80.0 × age) + (2.65 × height) + (54.15 × weight) + ${dep}`;
+            steps = [
+                `Age range: ${ageLabel} (energy deposition: +${dep} kcal)`,
+                `= ${c.i} ${sign(c.a * ageY)} ${Math.abs(c.a * ageY).toFixed(2)} + ${(c.h * ht).toFixed(2)} + ${(c.w * wt).toFixed(2)} + ${dep}`,
+                `= ${eer.toFixed(0)} kcal/day`
+            ];
+        } else {
+            const table = gender === 'male' ? MALE_EER[activity] : FEMALE_EER[activity];
+            const ga = getGrowthAllowance(ageY);
+            eer = table.i + table.a * ageY + table.h * ht + table.w * wt + ga;
+            const labels = { sedentary:'Inactive', low:'Low Active', active:'Active', very:'Very Active' };
+            formula = `EER (${labels[activity]}) = ${table.i} + (${table.a} × age) + (${table.h} × height) + (${table.w} × weight) + ${ga}`;
+            steps = [
+                `Activity: ${labels[activity]}`,
+                `Growth allowance: +${ga} kcal`,
+                `= ${table.i} + ${(table.a * ageY).toFixed(2)} + ${(table.h * ht).toFixed(2)} + ${(table.w * wt).toFixed(2)} + ${ga}`,
+                `= ${eer.toFixed(0)} kcal/day`
+            ];
+        }
+
+        return {
+            value: Math.round(eer),
+            work: `<div class="calc-formula">${formula}</div>` +
+                  steps.map(s => `<div class="calc-step">${s}</div>`).join('') +
+                  `<div class="calc-result">= ${Math.round(eer)} kcal/day</div>`
+        };
+    }
+
+    // ── Calculate Protein ──
+    function calcProtein(wt, ageM) {
+        let gPerKg = 0.85, label = '14-18 yr';
+        const labels = ['0-6 mo','7-12 mo','1-3 yr','4-8 yr','9-13 yr','14-18 yr'];
+        for (let i = 0; i < PROTEIN.length; i++) {
+            if (ageM <= PROTEIN[i][0]) { gPerKg = PROTEIN[i][1]; label = labels[i]; break; }
+        }
+        const total = wt * gPerKg;
+        return {
+            value: total.toFixed(1),
+            gPerKg,
+            work: `<div class="calc-formula">Protein = weight × DRI (g/kg/day)</div>` +
+                  `<div class="calc-step">DRI for ${label}: ${gPerKg} g/kg/day</div>` +
+                  `<div class="calc-step">= ${wt} kg × ${gPerKg} g/kg/day</div>` +
+                  `<div class="calc-result">= ${total.toFixed(1)} g/day</div>`
+        };
+    }
+
+    // ── Calculate Fluid (Holliday-Segar) ──
+    function calcFluid(wt) {
+        let fluid, steps;
+        if (wt <= 10) {
+            fluid = wt * 100;
+            steps = [`${wt} kg × 100 mL/kg = ${fluid.toFixed(0)} mL`];
+        } else if (wt <= 20) {
+            const a = 1000, b = (wt - 10) * 50;
+            fluid = a + b;
+            steps = [`First 10 kg: 1000 mL`, `Next ${(wt-10).toFixed(1)} kg × 50 = ${b.toFixed(0)} mL`, `Total: ${fluid.toFixed(0)} mL`];
+        } else {
+            const a = 1000, b = 500, c = (wt - 20) * 20;
+            fluid = a + b + c;
+            steps = [`First 10 kg: 1000 mL`, `Next 10 kg: 500 mL`, `Remaining ${(wt-20).toFixed(1)} kg × 20 = ${c.toFixed(0)} mL`, `Total: ${fluid.toFixed(0)} mL`];
+        }
+        const perKg = (fluid / wt).toFixed(1);
+        return {
+            value: Math.round(fluid),
+            perKg,
+            work: `<div class="calc-formula">Holliday-Segar Formula</div>` +
+                  `<div class="calc-step">First 10 kg: 100 mL/kg · 11-20 kg: 50 mL/kg · >20 kg: 20 mL/kg</div>` +
+                  steps.map(s => `<div class="calc-step">${s}</div>`).join('') +
+                  `<div class="calc-result">= ${Math.round(fluid)} mL/day (${perKg} mL/kg/day)</div>`
+        };
+    }
+
+    // ── Main Calculate ──
+    function calculateNutrition() {
+        const wt = parseFloat(document.getElementById('weight').value);
+        const ht = parseFloat(document.getElementById('height').value);
+        const ageM = getAgeMonths();
+        const gender = getGender();
+        const activity = document.getElementById('activity').value;
+
+        if (!wt || wt <= 0) return alert('Enter a valid weight.');
+        if (!ht || ht <= 0) return alert('Enter a valid height.');
+        if (ageM < 0 || ageM > 216) return alert('Enter a valid age (0-18 years).');
+        if (!gender) return alert('Select a gender.');
+        if (ageM >= 36 && !activity) return alert('Select an activity level for children 3+ years.');
+
+        const energy = calcEnergy(wt, ht, ageM, gender, activity);
+        const protein = calcProtein(wt, ageM);
+        const fluid = calcFluid(wt);
+
+        animateValue(document.getElementById('energyVal'), energy.value, 2200);
+        document.getElementById('energyPerKg').textContent = `(${(energy.value / wt).toFixed(1)} kcal/kg/day)`;
+        document.getElementById('energyWork').innerHTML = energy.work;
+
+        animateValue(document.getElementById('proteinVal'), parseFloat(protein.value), 1800);
+        document.getElementById('proteinPerKg').textContent = `(${protein.gPerKg} g/kg/day)`;
+        document.getElementById('proteinWork').innerHTML = protein.work;
+
+        animateValue(document.getElementById('fluidVal'), fluid.value, 2000);
+        document.getElementById('fluidPerKg').textContent = `(${fluid.perKg} mL/kg/day)`;
+        document.getElementById('fluidWork').innerHTML = fluid.work;
+
+        // Patient banner
+        const yr = Math.floor(ageM / 12), mo = ageM % 12;
+        let ageStr = '';
+        if (yr > 0) ageStr += `${yr}y`;
+        if (mo > 0) ageStr += `${yr > 0 ? ' ' : ''}${mo}m`;
+        if (!ageStr) ageStr = '0m';
+        const gStr = gender === 'male' ? 'M' : 'F';
+        document.getElementById('patientBanner').innerHTML =
+            `<strong>${wt} kg</strong> · ${ht} cm · ${ageStr} · ${gStr}` +
+            (ageM >= 36 ? ` · ${activity}` : '');
+
+        document.getElementById('nutritionResults').classList.add('visible');
+        document.getElementById('nutritionResults').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // ── Toggle Show Work ──
+    function toggleWork(type) {
+        const det = document.getElementById(type + 'Work');
+        const btn = det.previousElementSibling;
+        det.classList.toggle('visible');
+        btn.classList.toggle('open');
+        const txt = btn.querySelector('svg').nextSibling;
+        if (det.classList.contains('visible')) {
+            txt.textContent = ' Hide calculation';
+        } else {
+            txt.textContent = ' Show calculation';
+        }
+    }
+
+    // ── Reset All ──
+    function resetAll() {
+        document.getElementById('weight').value = '';
+        document.getElementById('height').value = '';
+        document.getElementById('ageYears').value = '';
+        document.getElementById('ageMonths').value = '';
+        document.getElementById('activity').value = '';
+        document.getElementById('activity').disabled = false;
+        document.getElementById('activityNote').textContent = '';
+        document.querySelectorAll('input[name="gender"]').forEach(r => r.checked = false);
+        document.getElementById('nutritionResults').classList.remove('visible');
+        document.querySelectorAll('.calc-details').forEach(d => d.classList.remove('visible'));
+        document.querySelectorAll('.show-work-btn').forEach(b => {
+            b.classList.remove('open');
+            const txt = b.querySelector('svg').nextSibling;
+            if (txt) txt.textContent = ' Show calculation';
+        });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    </script>
+</body>
+</html>
