@@ -34,19 +34,19 @@
             --text-secondary: #A89F96;
             --text-muted:     #6E6560;
 
-            /* Accent colors — Flexoki turned up */
-            --accent-gold:    #E5A91A;
-            --accent-gold-dim: rgba(229, 169, 26, 0.12);
-            --accent-teal:    #40BFA0;
-            --accent-teal-dim: rgba(64, 191, 160, 0.10);
-            --accent-rose:    #E06070;
-            --accent-blue:    #5CA8E0;
-            --accent-purple:  #A080D0;
-            --accent-orange:  #E08040;
+            /* Accent colors — Flexoki palette */
+            --accent-gold:    #D0A215;
+            --accent-gold-dim: rgba(208, 162, 21, 0.12);
+            --accent-teal:    #3AA99F;
+            --accent-teal-dim: rgba(58, 169, 159, 0.10);
+            --accent-rose:    #D14D41;
+            --accent-blue:    #4385BE;
+            --accent-purple:  #8B7EC8;
+            --accent-orange:  #DA702C;
 
             /* Functional */
-            --success:     #40BFA0;
-            --success-dim: rgba(64, 191, 160, 0.08);
+            --success:     #3AA99F;
+            --success-dim: rgba(58, 169, 159, 0.08);
             --error:       #E06070;
             --input-bg:    #1A1816;
             --input-border: #3A3530;
@@ -99,15 +99,6 @@
 
         .header h1 .little {
             font-weight: 700;
-            background: linear-gradient(
-                90deg,
-                #E06070, #E08040, #E5A91A, #40BFA0, #5CA8E0, #A080D0, #E06070
-            );
-            background-size: 300% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: rainbow-shift 9s linear infinite;
         }
 
         .header .subtitle {
@@ -499,6 +490,31 @@
             font-size: 0.65rem;
         }
 
+        .brand-footer {
+            margin-top: 10px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .brand-rainbow {
+            font-weight: 700;
+            background: linear-gradient(
+                90deg,
+                #D14D41, #DA702C, #D0A215, #879A39, #3AA99F, #4385BE, #8B7EC8, #CE5D97, #D14D41
+            );
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: rainbow-shift 9s linear infinite;
+        }
+
+        @keyframes rainbow-shift {
+            0% { background-position: 0% center; }
+            100% { background-position: 300% center; }
+        }
+
         /* ── Responsive ── */
         @media (max-width: 380px) {
             .app { padding: 0 12px 24px; }
@@ -533,8 +549,8 @@
 
         <!-- Header -->
         <div class="header">
-            <h1><span class="little">Little</span> Spoon</h1>
-            <p class="subtitle">a zhuzh labs app</p>
+            <h1><span class="little brand-rainbow">little</span> spoon</h1>
+            <p class="subtitle">pediatric nutrition tools</p>
         </div>
 
         <!-- Shared Patient Info -->
@@ -683,7 +699,10 @@
             <div class="sources">
                 <a href="https://www.canada.ca/en/health-canada/services/food-nutrition/healthy-eating/dietary-reference-intakes/tables/equations-estimate-energy-requirement.html" target="_blank">Health Canada DRI</a> · Holliday-Segar (1957) · <a href="https://www.who.int/tools/child-growth-standards" target="_blank">WHO Growth Standards</a>
             </div>
-            <div style="margin-top: 6px;">For clinical use. Always verify calculations.</div>
+            <div class="brand-footer">
+                a <span class="brand-rainbow">zhuzh labs</span> joint
+            </div>
+            <div style="margin-top: 4px;">For clinical use. Always verify calculations.</div>
         </footer>
     </div>
 
