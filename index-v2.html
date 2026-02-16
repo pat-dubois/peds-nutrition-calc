@@ -1392,10 +1392,25 @@
     }
 
     // ── Ordinal suffix ──
-    function ordinal(n) {
-        const s = ['th','st','nd','rd'];
-        const v = n % 100;
-        return n + (s[(v-20)%10] || s[v] || s[0]);
+    function ordinalSuffix(n) {
+        // Handle decimals - use the integer part for suffix logic
+        const i = Math.floor(Math.abs(n));
+        if (i % 100 >= 11 && i % 100 <= 13) return 'th';
+        switch (i % 10) {
+            case 1: return 'st';
+            case 2: return 'nd';
+            case 3: return 'rd';
+            default: return 'th';
+        }
+    }
+
+    // ── Set percentile with correct ordinal ──
+    function setPctDisplay(spanId, pct) {
+        const display = pct < 1 ? pct.toFixed(1) : Math.round(pct);
+        document.getElementById(spanId).textContent = display;
+        // Find the suffix span (next sibling)
+        const suffixEl = document.getElementById(spanId).nextElementSibling;
+        if (suffixEl) suffixEl.textContent = ordinalSuffix(display) + ' %ile';
     }
 
     // ── Set default measurement date to today ──
@@ -1443,7 +1458,7 @@
 
         document.getElementById('wfaZ').textContent = (wfaZ >= 0 ? '+' : '') + wfaZ.toFixed(2) + ' SD';
         document.getElementById('wfaZ').className = 'z-score ' + wfaColor;
-        document.getElementById('wfaPct').textContent = wfaPct < 1 ? wfaPct.toFixed(1) : Math.round(wfaPct);
+        setPctDisplay('wfaPct', wfaPct);
         positionMarker('wfaMarker', wfaZ, wfaColor);
 
         // ── Length/Height-for-Age ──
@@ -1462,7 +1477,7 @@
 
         document.getElementById('lhfaZ').textContent = (lhfaZ >= 0 ? '+' : '') + lhfaZ.toFixed(2) + ' SD';
         document.getElementById('lhfaZ').className = 'z-score ' + lhfaColor;
-        document.getElementById('lhfaPct').textContent = lhfaPct < 1 ? lhfaPct.toFixed(1) : Math.round(lhfaPct);
+        setPctDisplay('lhfaPct', lhfaPct);
         positionMarker('lhfaMarker', lhfaZ, lhfaColor);
 
         // ── BMI-for-Age or Weight-for-Length ──
@@ -1488,7 +1503,7 @@
 
         document.getElementById('bmiWflZ').textContent = (compZ >= 0 ? '+' : '') + compZ.toFixed(2) + ' SD';
         document.getElementById('bmiWflZ').className = 'z-score ' + compColor;
-        document.getElementById('bmiWflPct').textContent = compPct < 1 ? compPct.toFixed(1) : Math.round(compPct);
+        setPctDisplay('bmiWflPct', compPct);
         positionMarker('bmiWflMarker', compZ, compColor);
 
         // ── Head Circumference (optional) ──
@@ -1502,7 +1517,7 @@
 
             document.getElementById('hcZ').textContent = (hcZVal >= 0 ? '+' : '') + hcZVal.toFixed(2) + ' SD';
             document.getElementById('hcZ').className = 'z-score ' + hcColor;
-            document.getElementById('hcPct').textContent = hcPctVal < 1 ? hcPctVal.toFixed(1) : Math.round(hcPctVal);
+            setPctDisplay('hcPct', hcPctVal);
             positionMarker('hcMarker', hcZVal, hcColor);
             hcCard.style.display = '';
         } else {
