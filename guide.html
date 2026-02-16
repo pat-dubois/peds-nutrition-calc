@@ -62,15 +62,17 @@
 
         .header h1 .little {
             font-weight: 700;
-            background: linear-gradient(
-                90deg,
-                #AF3029, #BC5215, #AD8301, #66800B, #24837B, #205EA6, #5E409D, #A02F6F, #AF3029
-            );
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
+
+        /* Per-letter rainbow that survives PDF rendering */
+        .r1 { color: #AF3029; } /* red */
+        .r2 { color: #BC5215; } /* orange */
+        .r3 { color: #AD8301; } /* yellow */
+        .r4 { color: #66800B; } /* green */
+        .r5 { color: #24837B; } /* cyan */
+        .r6 { color: #205EA6; } /* blue */
+        .r7 { color: #5E409D; } /* purple */
+        .r8 { color: #A02F6F; } /* magenta */
 
         .header .subtitle {
             font-size: 11pt;
@@ -288,13 +290,6 @@
 
         .footer .brand .rainbow {
             font-weight: 700;
-            background: linear-gradient(
-                90deg,
-                #AF3029, #BC5215, #AD8301, #66800B, #24837B, #205EA6, #5E409D, #A02F6F
-            );
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .footer .sources {
@@ -316,7 +311,7 @@
 
     <!-- Header -->
     <div class="header">
-        <h1><span class="little">little</span> spoon</h1>
+        <h1><span class="little"><span class="r1">l</span><span class="r2">i</span><span class="r3">t</span><span class="r4">t</span><span class="r5">l</span><span class="r6">e</span></span> spoon</h1>
         <div class="subtitle">Quick Start Guide</div>
         <div class="tagline">Pediatric Nutrition Tools</div>
     </div>
@@ -440,7 +435,7 @@
 
     <!-- ═══ Footer ═══ -->
     <div class="footer">
-        <div class="brand">a <span class="rainbow">zhuzh labs</span> joint</div>
+        <div class="brand">a <span class="rainbow"><span class="r1">z</span><span class="r2">h</span><span class="r3">u</span><span class="r4">z</span><span class="r5">h</span> <span class="r6">l</span><span class="r7">a</span><span class="r8">b</span><span class="r1">s</span></span> joint</div>
         <p>For clinical use. Always verify calculations with clinical judgment.</p>
         <div class="sources">
             Sources: Health Canada 2023 DRI Equations · Holliday-Segar (1957) · WHO Child Growth Standards · IOM Dietary Reference Intakes (1997-2011)
