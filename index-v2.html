@@ -1241,13 +1241,11 @@
     }
 
     // ── Calculate exact age in months from DOB to measurement date ──
+    // Uses total days / 30.4375 (WHO standard method, matches AnthroCalc)
     function calcAgeMonths(dob, dom) {
-        let months = (dom.getFullYear() - dob.getFullYear()) * 12 + (dom.getMonth() - dob.getMonth());
-        // Add fractional month based on days
-        const dayDiff = dom.getDate() - dob.getDate();
-        const daysInMonth = new Date(dom.getFullYear(), dom.getMonth() + 1, 0).getDate();
-        const fractional = dayDiff / daysInMonth;
-        return months + fractional;
+        const diffMs = dom.getTime() - dob.getTime();
+        const totalDays = diffMs / (1000 * 60 * 60 * 24);
+        return totalDays / 30.4375;
     }
 
     // ── Format age for display ──
