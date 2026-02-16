@@ -445,28 +445,122 @@
         .calc-step { color: var(--text-muted); }
         .calc-result { color: var(--success); font-weight: 600; }
 
-        /* ── Coming Soon Placeholder ── */
-        .coming-soon {
-            text-align: center;
-            padding: 48px 20px;
+        /* ── DRI Reference Table ── */
+        .dri-section-label {
+            font-size: 0.68rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            padding: 10px 0 6px;
+            border-bottom: 1px solid var(--border-subtle);
+            margin-bottom: 2px;
+        }
+
+        .dri-section-label.first {
+            padding-top: 0;
+        }
+
+        .dri-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            font-size: 0.82rem;
+        }
+
+        .dri-row:last-child {
+            border-bottom: none;
+        }
+
+        .dri-name {
+            flex: 1;
+            color: var(--text-secondary);
+            font-weight: 400;
+            min-width: 0;
+        }
+
+        .dri-name .dri-unit {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            margin-left: 2px;
+        }
+
+        .dri-rda {
+            width: 70px;
+            text-align: right;
+            font-weight: 600;
+            color: var(--success);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .dri-ul {
+            width: 60px;
+            text-align: right;
+            font-weight: 500;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .dri-ai {
+            color: var(--accent-blue);
+        }
+
+        .dri-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 0 6px;
+            margin-bottom: 4px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .dri-header span {
+            font-size: 0.65rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
             color: var(--text-muted);
         }
 
-        .coming-soon .icon {
-            font-size: 2rem;
-            margin-bottom: 12px;
+        .dri-header .dri-h-rda { width: 70px; text-align: right; }
+        .dri-header .dri-h-ul { width: 60px; text-align: right; }
+
+        .dri-legend {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.68rem;
+            color: var(--text-muted);
         }
 
-        .coming-soon h3 {
-            font-size: 1rem;
-            font-weight: 600;
+        .dri-legend-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+
+        .dri-legend-dot.rda { background: var(--success); }
+        .dri-legend-dot.ai { background: var(--accent-blue); }
+
+        .dri-age-badge {
+            text-align: center;
+            font-size: 0.78rem;
             color: var(--text-secondary);
-            margin-bottom: 6px;
+            margin-bottom: 12px;
+            padding: 8px;
+            background: var(--bg-raised);
+            border-radius: var(--radius-sm);
         }
 
-        .coming-soon p {
-            font-size: 0.82rem;
-            line-height: 1.6;
+        .dri-age-badge strong {
+            color: var(--text-primary);
         }
 
         /* ── Growth Chart Results ── */
@@ -900,16 +994,29 @@
         </div>
 
         <!-- ════════════════════════════════════
-             TAB 3: DRI Reference (placeholder)
+             TAB 3: DRI Reference
              ════════════════════════════════════ -->
         <div class="tab-content" id="contentDRI">
             <div class="card">
-                <div class="coming-soon">
-                    <div class="icon">📋</div>
-                    <h3>DRI Reference</h3>
-                    <p>Health Canada daily reference intakes.<br>Coming soon.</p>
+                <div class="card-label">Age Group</div>
+                <div class="field-row">
+                    <div class="field">
+                        <label for="driAgeGroup">Select age range</label>
+                        <select id="driAgeGroup" onchange="renderDRI()">
+                            <option value="">Choose age group</option>
+                            <option value="0-6mo">0 - 6 months</option>
+                            <option value="7-12mo">7 - 12 months</option>
+                            <option value="1-3y">1 - 3 years</option>
+                            <option value="4-8y">4 - 8 years</option>
+                            <option value="9-13y">9 - 13 years</option>
+                            <option value="14-18y">14 - 18 years</option>
+                        </select>
+                    </div>
                 </div>
+                <p class="activity-note" id="driGenderNote"></p>
             </div>
+
+            <div id="driOutput"></div>
         </div>
 
         <!-- Footer -->
@@ -1435,8 +1542,139 @@
         document.getElementById('growthResults').classList.remove('visible');
         document.getElementById('growthHC').style.display = 'none';
 
+        // Tab 3
+        document.getElementById('driAgeGroup').value = '';
+        document.getElementById('driOutput').innerHTML = '';
+        document.getElementById('driGenderNote').textContent = '';
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+
+    // ══════════════════════════════════════════
+    //  TAB 3: DRI REFERENCE TABLES
+    //  Sources: IOM (1997-2001, 2011), Health Canada
+    //  Vitamin D & Calcium updated per 2011 IOM report
+    // ══════════════════════════════════════════
+
+    // DRI data: { nutrient: { unit, values: { ageGroup: value_or_[m,f] }, ai: bool_per_age, ul: { ageGroup: value } } }
+    // value with * suffix in source = AI (Adequate Intake), otherwise RDA
+    // For 9-13y and 14-18y, [male, female] where they differ
+
+    const DRI_VITAMINS = [
+        { name: 'Vitamin A',         unit: 'µg RAE',  vals: {'0-6mo':400,'7-12mo':500,'1-3y':300,'4-8y':400,'9-13y':600,'14-18y':[900,700]},         ai: {'0-6mo':true,'7-12mo':true}, ul: {'0-6mo':600,'7-12mo':600,'1-3y':600,'4-8y':900,'9-13y':1700,'14-18y':2800} },
+        { name: 'Vitamin C',         unit: 'mg',       vals: {'0-6mo':40,'7-12mo':50,'1-3y':15,'4-8y':25,'9-13y':45,'14-18y':[75,65]},                ai: {'0-6mo':true,'7-12mo':true}, ul: {'1-3y':400,'4-8y':650,'9-13y':1200,'14-18y':1800} },
+        { name: 'Vitamin D',         unit: 'µg',       vals: {'0-6mo':10,'7-12mo':10,'1-3y':15,'4-8y':15,'9-13y':15,'14-18y':15},                      ai: {'0-6mo':true,'7-12mo':true}, ul: {'0-6mo':25,'7-12mo':38,'1-3y':63,'4-8y':75,'9-13y':100,'14-18y':100} },
+        { name: 'Vitamin E',         unit: 'mg',       vals: {'0-6mo':4,'7-12mo':5,'1-3y':6,'4-8y':7,'9-13y':11,'14-18y':15},                          ai: {'0-6mo':true,'7-12mo':true}, ul: {'1-3y':200,'4-8y':300,'9-13y':600,'14-18y':800} },
+        { name: 'Vitamin K',         unit: 'µg',       vals: {'0-6mo':2.0,'7-12mo':2.5,'1-3y':30,'4-8y':55,'9-13y':60,'14-18y':75},                    ai: {'0-6mo':true,'7-12mo':true,'1-3y':true,'4-8y':true,'9-13y':true,'14-18y':true} },
+        { name: 'Thiamin (B1)',      unit: 'mg',       vals: {'0-6mo':0.2,'7-12mo':0.3,'1-3y':0.5,'4-8y':0.6,'9-13y':0.9,'14-18y':[1.2,1.0]},        ai: {'0-6mo':true,'7-12mo':true} },
+        { name: 'Riboflavin (B2)',   unit: 'mg',       vals: {'0-6mo':0.3,'7-12mo':0.4,'1-3y':0.5,'4-8y':0.6,'9-13y':0.9,'14-18y':[1.3,1.0]},        ai: {'0-6mo':true,'7-12mo':true} },
+        { name: 'Niacin (B3)',       unit: 'mg NE',    vals: {'0-6mo':2,'7-12mo':4,'1-3y':6,'4-8y':8,'9-13y':12,'14-18y':[16,14]},                     ai: {'0-6mo':true,'7-12mo':true}, ul: {'1-3y':10,'4-8y':15,'9-13y':20,'14-18y':30} },
+        { name: 'Vitamin B6',        unit: 'mg',       vals: {'0-6mo':0.1,'7-12mo':0.3,'1-3y':0.5,'4-8y':0.6,'9-13y':1.0,'14-18y':[1.3,1.2]},        ai: {'0-6mo':true,'7-12mo':true}, ul: {'1-3y':30,'4-8y':40,'9-13y':60,'14-18y':80} },
+        { name: 'Folate',            unit: 'µg DFE',   vals: {'0-6mo':65,'7-12mo':80,'1-3y':150,'4-8y':200,'9-13y':300,'14-18y':400},                  ai: {'0-6mo':true,'7-12mo':true}, ul: {'1-3y':300,'4-8y':400,'9-13y':600,'14-18y':800} },
+        { name: 'Vitamin B12',       unit: 'µg',       vals: {'0-6mo':0.4,'7-12mo':0.5,'1-3y':0.9,'4-8y':1.2,'9-13y':1.8,'14-18y':2.4},              ai: {'0-6mo':true,'7-12mo':true} },
+        { name: 'Pantothenic Acid',  unit: 'mg',       vals: {'0-6mo':1.7,'7-12mo':1.8,'1-3y':2,'4-8y':3,'9-13y':4,'14-18y':5},                       ai: {'0-6mo':true,'7-12mo':true,'1-3y':true,'4-8y':true,'9-13y':true,'14-18y':true} },
+        { name: 'Biotin',            unit: 'µg',       vals: {'0-6mo':5,'7-12mo':6,'1-3y':8,'4-8y':12,'9-13y':20,'14-18y':25},                         ai: {'0-6mo':true,'7-12mo':true,'1-3y':true,'4-8y':true,'9-13y':true,'14-18y':true} },
+        { name: 'Choline',           unit: 'mg',       vals: {'0-6mo':125,'7-12mo':150,'1-3y':200,'4-8y':250,'9-13y':375,'14-18y':[550,400]},          ai: {'0-6mo':true,'7-12mo':true,'1-3y':true,'4-8y':true,'9-13y':true,'14-18y':true}, ul: {'1-3y':1000,'4-8y':1000,'9-13y':2000,'14-18y':3000} },
+    ];
+
+    const DRI_MINERALS = [
+        { name: 'Calcium',     unit: 'mg',  vals: {'0-6mo':200,'7-12mo':260,'1-3y':700,'4-8y':1000,'9-13y':1300,'14-18y':1300},                  ai: {'0-6mo':true,'7-12mo':true}, ul: {'0-6mo':1000,'7-12mo':1500,'1-3y':2500,'4-8y':2500,'9-13y':3000,'14-18y':3000} },
+        { name: 'Iron',        unit: 'mg',  vals: {'0-6mo':0.27,'7-12mo':11,'1-3y':7,'4-8y':10,'9-13y':8,'14-18y':[11,15]},                      ai: {'0-6mo':true}, ul: {'0-6mo':40,'7-12mo':40,'1-3y':40,'4-8y':40,'9-13y':40,'14-18y':45} },
+        { name: 'Zinc',        unit: 'mg',  vals: {'0-6mo':2,'7-12mo':3,'1-3y':3,'4-8y':5,'9-13y':8,'14-18y':[11,9]},                            ai: {'0-6mo':true}, ul: {'0-6mo':4,'7-12mo':5,'1-3y':7,'4-8y':12,'9-13y':23,'14-18y':34} },
+        { name: 'Phosphorus',  unit: 'mg',  vals: {'0-6mo':100,'7-12mo':275,'1-3y':460,'4-8y':500,'9-13y':1250,'14-18y':1250},                   ai: {'0-6mo':true,'7-12mo':true}, ul: {'1-3y':3000,'4-8y':3000,'9-13y':4000,'14-18y':4000} },
+        { name: 'Magnesium',   unit: 'mg',  vals: {'0-6mo':30,'7-12mo':75,'1-3y':80,'4-8y':130,'9-13y':240,'14-18y':[410,360]},                  ai: {'0-6mo':true,'7-12mo':true}, ul: {'1-3y':65,'4-8y':110,'9-13y':350,'14-18y':350} },
+        { name: 'Iodine',      unit: 'µg',  vals: {'0-6mo':110,'7-12mo':130,'1-3y':90,'4-8y':90,'9-13y':120,'14-18y':150},                       ai: {'0-6mo':true,'7-12mo':true}, ul: {'1-3y':200,'4-8y':300,'9-13y':600,'14-18y':900} },
+        { name: 'Selenium',    unit: 'µg',  vals: {'0-6mo':15,'7-12mo':20,'1-3y':20,'4-8y':30,'9-13y':40,'14-18y':55},                           ai: {'0-6mo':true,'7-12mo':true}, ul: {'0-6mo':45,'7-12mo':60,'1-3y':90,'4-8y':150,'9-13y':280,'14-18y':400} },
+        { name: 'Copper',      unit: 'µg',  vals: {'0-6mo':200,'7-12mo':220,'1-3y':340,'4-8y':440,'9-13y':700,'14-18y':890},                     ai: {'0-6mo':true,'7-12mo':true}, ul: {'1-3y':1000,'4-8y':3000,'9-13y':5000,'14-18y':8000} },
+        { name: 'Manganese',   unit: 'mg',  vals: {'0-6mo':0.003,'7-12mo':0.6,'1-3y':1.2,'4-8y':1.5,'9-13y':1.9,'14-18y':[2.2,1.6]},            ai: {'0-6mo':true,'7-12mo':true,'1-3y':true,'4-8y':true,'9-13y':true,'14-18y':true}, ul: {'1-3y':2,'4-8y':3,'9-13y':6,'14-18y':9} },
+        { name: 'Chromium',    unit: 'µg',  vals: {'0-6mo':0.2,'7-12mo':5.5,'1-3y':11,'4-8y':15,'9-13y':25,'14-18y':[35,24]},                    ai: {'0-6mo':true,'7-12mo':true,'1-3y':true,'4-8y':true,'9-13y':true,'14-18y':true} },
+        { name: 'Molybdenum',  unit: 'µg',  vals: {'0-6mo':2,'7-12mo':3,'1-3y':17,'4-8y':22,'9-13y':34,'14-18y':43},                             ai: {'0-6mo':true,'7-12mo':true}, ul: {'1-3y':300,'4-8y':600,'9-13y':1100,'14-18y':1700} },
+        { name: 'Fluoride',    unit: 'mg',  vals: {'0-6mo':0.01,'7-12mo':0.5,'1-3y':0.7,'4-8y':1,'9-13y':2,'14-18y':3},                          ai: {'0-6mo':true,'7-12mo':true,'1-3y':true,'4-8y':true,'9-13y':true,'14-18y':true}, ul: {'0-6mo':0.7,'7-12mo':0.9,'1-3y':1.3,'4-8y':2.2,'9-13y':10,'14-18y':10} },
+    ];
+
+    function renderDRI() {
+        const ageGroup = document.getElementById('driAgeGroup').value;
+        const gender = getGender();
+        const output = document.getElementById('driOutput');
+        const note = document.getElementById('driGenderNote');
+
+        if (!ageGroup) {
+            output.innerHTML = '';
+            note.textContent = '';
+            return;
+        }
+
+        const needsGender = (ageGroup === '9-13y' || ageGroup === '14-18y');
+        if (needsGender && !gender) {
+            note.textContent = 'Select gender above for age-specific values.';
+            output.innerHTML = '';
+            return;
+        }
+        note.textContent = '';
+
+        const isMale = gender === 'male';
+        const genderIdx = isMale ? 0 : 1;
+        const labels = {'0-6mo':'0 - 6 months','7-12mo':'7 - 12 months','1-3y':'1 - 3 years','4-8y':'4 - 8 years','9-13y':'9 - 13 years','14-18y':'14 - 18 years'};
+        const gLabel = needsGender ? (isMale ? ' · Male' : ' · Female') : '';
+
+        function getVal(item, ageGroup) {
+            const raw = item.vals[ageGroup];
+            if (Array.isArray(raw)) return raw[genderIdx];
+            return raw;
+        }
+
+        function fmtVal(v) {
+            if (v === undefined || v === null) return '-';
+            if (v >= 1000) return v.toLocaleString();
+            if (v < 0.01) return v.toString();
+            if (v < 1 && v !== 0) return v.toString();
+            if (Number.isInteger(v)) return v.toString();
+            return v.toString();
+        }
+
+        function isAI(item, ageGroup) {
+            return item.ai && item.ai[ageGroup];
+        }
+
+        function renderSection(title, items, isFirst) {
+            let html = `<div class="dri-section-label${isFirst ? ' first' : ''}">${title}</div>`;
+            for (const item of items) {
+                const val = getVal(item, ageGroup);
+                const ai = isAI(item, ageGroup);
+                const ulVal = item.ul ? item.ul[ageGroup] : null;
+                html += `<div class="dri-row">
+                    <div class="dri-name">${item.name} <span class="dri-unit">${item.unit}</span></div>
+                    <div class="dri-rda${ai ? ' dri-ai' : ''}">${fmtVal(val)}${ai ? '*' : ''}</div>
+                    <div class="dri-ul">${ulVal ? fmtVal(ulVal) : '-'}</div>
+                </div>`;
+            }
+            return html;
+        }
+
+        let html = `<div class="card" style="animation: fadeIn 0.3s ease;">`;
+        html += `<div class="dri-age-badge"><strong>${labels[ageGroup]}</strong>${gLabel}</div>`;
+        html += `<div class="dri-header">
+            <span style="flex:1;">Nutrient</span>
+            <span class="dri-h-rda">RDA/AI</span>
+            <span class="dri-h-ul">UL</span>
+        </div>`;
+        html += renderSection('Vitamins', DRI_VITAMINS, true);
+        html += renderSection('Minerals', DRI_MINERALS, false);
+        html += `<div class="dri-legend">
+            <span><span class="dri-legend-dot rda"></span>RDA</span>
+            <span><span class="dri-legend-dot ai"></span>AI*</span>
+            <span style="margin-left: auto; font-style: italic;">UL = upper limit</span>
+        </div>`;
+        html += `</div>`;
+        output.innerHTML = html;
+    }
+
+    // Auto-select DRI age group when gender changes
+    document.querySelectorAll('input[name="gender"]').forEach(r => {
+        r.addEventListener('change', () => {
+            if (document.getElementById('driAgeGroup').value) renderDRI();
+        });
+    });
 
     </script>
 </body>
